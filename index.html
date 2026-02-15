@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      body { font-family: 'Sarabun', sans-serif; background-color: #f0f9ff; }
+      .sarabun-text { font-size: 1rem; }
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #f1f1f1; }
+      ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+      .bg-pastel-blue { background-color: #e0f2fe; }
+      .bg-pastel-yellow { background-color: #fef9c3; }
+      .text-pastel-blue-dark { color: #0369a1; }
+      .border-pastel-blue { border-color: #bae6fd; }
+    </style>
+  </head>
+  <body class="min-h-screen py-8 px-4">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100">
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 text-center border-b border-blue-200">
+          <img src="https://www.ns.ac.th/wp-content/uploads/2024/12/cropped-logo-sq.png" alt="Logo" class="h-24 mx-auto mb-4 drop-shadow-sm">
+          <h1 class="text-3xl font-bold text-pastel-blue-dark mb-1">ระบบจองห้องประชุม</h1>
+          <h2 class="text-xl text-blue-600 font-medium">โรงเรียนนราสิกขาลัย</h2>
+        </div>
+
+        <div class="p-8">
+          <form id="bookingForm" onsubmit="handleFormSubmit(this)">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <div class="md:col-span-2">
+                <label class="block text-gray-700 font-bold mb-2">ชื่อ-นามสกุล / หน่วยงาน</label>
+                <input type="text" name="username" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-400 outline-none transition bg-blue-50/30"
+                  placeholder="เช่น ครูสมศรี งานวิชาการ">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-gray-700 font-bold mb-2">เลือกห้องประชุม</label>
+                <select name="room" id="roomSelect" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 outline-none bg-yellow-50/50">
+                  <option value="" disabled selected>-- กรุณาเลือกห้อง --</option>
+                  <option value="ห้องประชุมเทียบทอง">ห้องประชุมเทียบทอง</option>
+                  <option value="ห้องประชุม 1">ห้องประชุม 1</option>
+                  <option value="ห้องประชุม 2">ห้องประชุม 2</option>
+                  <option value="หอประชุมใหม่">หอประชุมใหม่</option>
+                  <option value="หอประชุมร่มไทร">หอประชุมร่มไทร</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-gray-700 font-bold mb-2">วันที่ใช้งาน</label>
+                <input type="date" name="bookingDate" id="bookingDateInput" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 outline-none">
+              </div>
+
+              <div class="flex space-x-2">
+                <div class="w-1/2">
+                  <label class="block text-gray-700 font-bold mb-2">เริ่ม</label>
+                  <input type="time" name="startTime" id="startTimeInput" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 outline-none">
+                </div>
+                <div class="w-1/2">
+                  <label class="block text-gray-700 font-bold mb-2">สิ้นสุด</label>
+                  <input type="time" name="endTime" id="endTimeInput" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-gray-700 font-bold mb-2">หัวข้อการประชุม / รายละเอียด</label>
+                <textarea name="reason" rows="5" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 outline-none resize-none"
+                  placeholder="ระบุหัวข้อการประชุม หรือจำนวนผู้เข้าประชุม..."></textarea>
+              </div>
+
+              <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                <label class="block text-gray-700 font-bold mb-3 border-b border-blue-200 pb-1">อุปกรณ์เสริม</label>
+                <div class="space-y-2">
+                  <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
+                    <input type="checkbox" name="equipment" value="ไมโครโฟน" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400">
+                    <span class="text-gray-700">ไมโครโฟน</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
+                    <input type="checkbox" name="equipment" value="ไมค์ลอย" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400">
+                    <span class="text-gray-700">ไมค์ลอย</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
+                    <input type="checkbox" name="equipment" value="โปรเจคเตอร์" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400">
+                    <span class="text-gray-700">โปรเจคเตอร์</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
+                    <input type="checkbox" name="equipment" value="กล้อง VDO Conference" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400">
+                    <span class="text-gray-700">กล้อง VDO Conference</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-8 text-center">
+              <button type="submit" 
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl text-lg w-full md:w-auto">
+                <span class="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  ยืนยันการจองห้อง
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border border-yellow-200 overflow-hidden">
+        <div class="bg-yellow-50 px-6 py-4 border-b border-yellow-200 flex justify-between items-center">
+          <h3 class="text-xl font-bold text-yellow-800 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            รายละเอียดการจองล่าสุด
+          </h3>
+          <span class="text-sm text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full">อัปเดตล่าสุด</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-4 text-center">วันที่ใช้</th>
+                <th class="py-3 px-4 text-center">เวลา</th>
+                <th class="py-3 px-4">ห้องประชุม</th>
+                <th class="py-3 px-4">ผู้จอง</th>
+                <th class="py-3 px-4">รายละเอียด</th>
+                <th class="py-3 px-4">อุปกรณ์</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="text-gray-700 text-sm">
+              <tr><td colspan="6" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-3 flex justify-between items-center border-t">
+          <button id="prevBtn" onclick="changePage(-1)" disabled 
+            class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-500 cursor-not-allowed hover:bg-gray-100 transition disabled:opacity-50">
+            &larr; ก่อนหน้า
+          </button>
+          <span id="pageIndicator" class="text-gray-600 font-medium">หน้า 1</span>
+          <button id="nextBtn" onclick="changePage(1)" disabled
+            class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition disabled:opacity-50">
+            ถัดไป &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ============================================
+      // ส่วนจำลอง (Mock) สำหรับรันใน Preview
+      // ============================================
+      if (typeof google === 'undefined') {
+        var google = {
+          script: {
+            run: {
+              withSuccessHandler: function(successCallback) {
+                this.successCallback = successCallback;
+                return this;
+              },
+              withFailureHandler: function(failureCallback) {
+                this.failureCallback = failureCallback;
+                return this;
+              },
+              processForm: function(formObject) {
+                // Mock: ตรวจสอบวันที่ย้อนหลัง
+                const bookingDate = new Date(formObject.bookingDate);
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                
+                if (bookingDate < today) {
+                   setTimeout(() => {
+                    if (this.failureCallback) this.failureCallback("ท่านไม่สามารถจองย้อนหลังได้ครับ");
+                   }, 500);
+                   return;
+                }
+
+                // Mock: ตรวจสอบห้องซ้ำ (ห้องเทียบทอง)
+                setTimeout(() => {
+                  if (formObject.room === "ห้องประชุมเทียบทอง") {
+                    if (this.failureCallback) {
+                      this.failureCallback("มีการจองแล้วครับ");
+                    }
+                  } else {
+                    if (this.successCallback) {
+                      this.successCallback({ status: 'success', message: 'Mock Success' });
+                    }
+                  }
+                }, 1000);
+              },
+              getBookingHistory: function(page, pageSize) {
+                setTimeout(() => {
+                  if (this.successCallback) {
+                    const mockData = [
+                      ["2023-10-25T10:00:00", "ครูวิชาการ", "ห้องประชุมเทียบทอง", "2023-10-26", "09:00", "12:00", "ประชุมวิชาการประจำเดือน", "ไมโครโฟน, โปรเจคเตอร์"],
+                      ["2023-10-24T14:00:00", "ผอ.โรงเรียน", "หอประชุมใหม่", "2023-10-27", "13:00", "16:00", "ต้อนรับคณะดูงาน", "เครื่องเสียงชุดใหญ่"],
+                      ["2023-10-23T09:30:00", "กลุ่มสาระวิทย์", "ห้องประชุม 1", "2023-10-28", "08:30", "16:30", "อบรมเชิงปฏิบัติการ", "โปรเจคเตอร์"],
+                    ];
+                    this.successCallback({
+                      data: mockData,
+                      hasMore: false
+                    });
+                  }
+                }, 800);
+              }
+            }
+          }
+        };
+      }
+      // ============================================
+
+      let currentPage = 1;
+      const pageSize = 10;
+
+      window.onload = function() {
+        // 1. ตั้งค่า Min Date ให้เป็นวันนี้ (ป้องกันเลือกใน UI)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("bookingDateInput").setAttribute('min', today);
+
+        // 2. โหลดข้อมูลตาราง
+        loadTableData();
+      };
+
+      function handleFormSubmit(formObject) {
+        event.preventDefault();
+
+        // --- เพิ่มการตรวจสอบเวลา Start vs End ---
+        const startTime = formObject.startTime.value;
+        const endTime = formObject.endTime.value;
+
+        // ถ้าเวลาสิ้นสุด น้อยกว่าหรือเท่ากับ เวลาเริ่ม (เช่น เริ่ม 10.00 จบ 09.00)
+        if (startTime && endTime && endTime <= startTime) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'ข้อมูลไม่ถูกต้อง',
+            text: 'กรุณากำหนดเวลาให้ถูกต้องครับ',
+            confirmButtonColor: '#f59e0b',
+            confirmButtonText: 'แก้ไขข้อมูล'
+          });
+          return; // หยุดการทำงาน ไม่ส่งข้อมูลไป Server
+        }
+        // ------------------------------------
+        
+        Swal.fire({
+          title: 'กำลังตรวจสอบ...',
+          text: 'กรุณารอสักครู่',
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading()
+        });
+
+        google.script.run
+          .withSuccessHandler(onSuccess)
+          .withFailureHandler(onFailure)
+          .processForm(formObject);
+      }
+
+      function onSuccess(response) {
+        if(response.status === 'success') {
+          Swal.fire({
+            icon: 'success',
+            title: 'จองสำเร็จ!',
+            text: 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว',
+            confirmButtonColor: '#3b82f6'
+          });
+          document.getElementById("bookingForm").reset();
+          // Reset Min Date หลังล้างฟอร์ม
+          const today = new Date().toISOString().split('T')[0];
+          document.getElementById("bookingDateInput").setAttribute('min', today);
+
+          currentPage = 1;
+          loadTableData();
+        } else {
+          onFailure(response.message);
+        }
+      }
+
+      function onFailure(error) {
+        // แสดง Alert สีแดงเมื่อเกิดข้อผิดพลาด
+        Swal.fire({
+          icon: 'error',
+          title: 'ขออภัย',
+          text: error, // ข้อความ Error จาก Server
+          confirmButtonColor: '#ef4444',
+          confirmButtonText: 'ตกลง'
+        });
+      }
+
+      function loadTableData() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">กำลังโหลดข้อมูล...</td></tr>';
+        
+        google.script.run
+          .withSuccessHandler(renderTable)
+          .getBookingHistory(currentPage, pageSize);
+      }
+
+      function renderTable(response) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        if (!response.data || response.data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">ไม่พบข้อมูลการจอง</td></tr>';
+          return;
+        }
+
+        response.data.forEach(row => {
+          let dateStr = row[3]; 
+          try {
+            const d = new Date(row[3]);
+            if(!isNaN(d.getTime())) {
+                dateStr = d.toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'2-digit'});
+            }
+          } catch(e){}
+
+          const tr = document.createElement('tr');
+          tr.className = "border-b border-gray-100 hover:bg-blue-50 transition";
+          tr.innerHTML = `
+            <td class="py-3 px-4 text-center whitespace-nowrap font-medium text-blue-600">${dateStr}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap text-xs text-gray-500 bg-gray-50 rounded-full my-1 inline-block mx-2">${row[4]} - ${row[5]} น.</td>
+            <td class="py-3 px-4 font-semibold text-gray-700">${row[2]}</td>
+            <td class="py-3 px-4">${row[1]}</td>
+            <td class="py-3 px-4 text-gray-600 truncate max-w-xs">${row[6]}</td>
+            <td class="py-3 px-4 text-sm text-blue-500">${row[7]}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('pageIndicator').innerText = `หน้า ${currentPage}`;
+        
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        prevBtn.disabled = (currentPage === 1);
+        if (response.hasMore) {
+          nextBtn.disabled = false;
+          nextBtn.classList.remove('cursor-not-allowed', 'text-gray-400');
+          nextBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
+        } else {
+          nextBtn.disabled = true;
+          nextBtn.classList.add('cursor-not-allowed', 'text-gray-400');
+        }
+      }
+
+      function changePage(direction) {
+        currentPage += direction;
+        loadTableData();
+      }
+    </script>
+  </body>
+</html>
